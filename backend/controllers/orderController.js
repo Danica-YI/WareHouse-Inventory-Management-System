@@ -140,14 +140,18 @@ const updateOrderStatus = async (req, res) => {
             return res.status(400).json({ message: 'Can only receive shipped orders' });
         }
 
+        
         // If received, update stock quantities
         if (status === 'received') {
             for (const item of order.items) {
                 const stock = await Stock.findById(item.stock);
-                if (stock) {
-                    stock.quantity += item.quantity;
-                    await stock.save();
+                if (!stock) {
+                    return res.status(400).json({
+                        message: `Cannot receive order: stock not found for one of the items (it may have been deleted)`
+                    });
                 }
+                stock.quantity += item.quantity;
+                await stock.save();
             }
         }
 

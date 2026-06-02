@@ -167,7 +167,7 @@ function StaffDashboard() {
                 outboundList: movements.data.filter(m =>
                     m.type === 'outbound_sale' || m.type === 'outbound_return'
                 ).length,
-                inboundList: movements.data.filter(m => m.type === 'inbound').length,
+                inboundList: orders.data.filter(o => o.status === 'shipped').length,
                 lowStockAlerts: alerts.data.length,
                 viewOrders: orders.data.length,
                 submittedRequests: adjustments.data.filter(a =>

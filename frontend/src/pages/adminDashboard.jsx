@@ -57,75 +57,59 @@ const BottomNav = ({ navigate }) => (
 );
 
 // navigation on web
-const Sidebar = ({ navigate, handleLogout }) => (
+const DesktopSidebar = ({ navigate, handleLogout, user }) => (
     <div style={{
-        width: '240px',
-        backgroundColor: 'white',
-        height: '100vh',
-        position: 'fixed',
-        left: 0,
-        top: 0,
-        boxShadow: '2px 0 8px rgba(0,0,0,0.08)',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '24px 0',
-        zIndex: 100,
+        width: '240px', minHeight: '100vh', backgroundColor: 'white',
+        borderRight: '1px solid #eee', padding: '20px 0',
+        position: 'fixed', left: 0, top: 0, display: 'flex', flexDirection: 'column',
     }}>
-        {/* Logo */}
-        <div style={{ padding: '0 24px 24px', borderBottom: '1px solid #eee' }}>
+        <div style={{ padding: '0 20px 30px', borderBottom: '1px solid #eee' }}>
             <span style={{ color: '#ECBC76', fontWeight: 'bold', fontSize: '24px' }}>WIMS</span>
-            <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#888' }}>Warehouse Inventory</p>
+            <p style={{ margin: '8px 0 0', fontSize: '12px', color: '#888' }}>Warehouse Inventory</p>
         </div>
-
-        {/* Nav Items */}
-        <div style={{ flex: 1, padding: '16px 0' }}>
+        <div style={{ padding: '20px', borderBottom: '1px solid #eee' }}>
+            <p style={{ margin: 0, fontWeight: 'bold', fontSize: '14px' }}>{user?.name}</p>
+            <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#ECBC76' }}>{user?.role?.toUpperCase()}</p>
+        </div>
+        <nav style={{ flex: 1, padding: '20px 0' }}>
             {[
                 { icon: '🏠', label: 'Dashboard', path: '/dashboard' },
                 { icon: '📦', label: 'Stock', path: '/stocks' },
-                { icon: '📋', label: 'Orders', path: '/orders' },
-                { icon: '🔔', label: 'Alerts', path: '/alerts' },
-                { icon: '📊', label: 'Adjustments', path: '/adjustments' },
-                { icon: '👥', label: 'Suppliers', path: '/suppliers' },
-                { icon: '👤', label: 'Users', path: '/users' },
-            ].map(item => (
-                <div
-                    key={item.path}
-                    onClick={() => navigate(item.path)}
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '12px',
-                        padding: '12px 24px',
-                        cursor: 'pointer',
-                        fontSize: '15px',
-                        color: '#444',
-                        transition: 'background 0.2s',
-                    }}
+                ...(user?.role === 'admin' ? [
+                    { icon: '📋', label: 'Purchase Orders', path: '/orders' },
+                    { icon: '👥', label: 'Suppliers', path: '/suppliers' },
+                    { icon: '👤', label: 'Users', path: '/users' },
+                ] : [
+                    { icon: '📥', label: 'Inbound', path: '/inbound' },
+                    { icon: '📤', label: 'Outbound', path: '/outbound' },
+                    { icon: '📋', label: 'View Orders', path: '/orders' },
+                ]),
+                { icon: '🔔', label: 'Low Stock Alerts', path: '/alerts' },
+                { icon: '⚙️', label: 'Adjustments', path: '/adjustments' },
+            ].map((item) => (
+                <div key={item.path} onClick={() => navigate(item.path)} style={{
+                    padding: '12px 20px', cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px',
+                    color: window.location.pathname === item.path ? '#ECBC76' : '#444',
+                    fontWeight: window.location.pathname === item.path ? 'bold' : 'normal',
+                    backgroundColor: window.location.pathname === item.path ? '#FFF8EC' : 'transparent',
+                }}
                     onMouseEnter={e => e.currentTarget.style.backgroundColor = '#FFF8EC'}
-                    onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                    onMouseLeave={e => {
+                        if (window.location.pathname !== item.path)
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
                 >
-                    <span>{item.icon}</span>
-                    <span>{item.label}</span>
+                    <span>{item.icon}</span><span>{item.label}</span>
                 </div>
             ))}
-        </div>
-
-        {/* Logout */}
-        <div
-            onClick={handleLogout}
-            style={{
-                padding: '16px 24px',
-                cursor: 'pointer',
-                color: '#f44336',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                fontSize: '15px',
-                borderTop: '1px solid #eee',
-            }}
-        >
-            <span>🚪</span>
-            <span>Logout</span>
+        </nav>
+        <div style={{ padding: '20px', borderTop: '1px solid #eee' }}>
+            <button onClick={handleLogout} style={{
+                width: '100%', padding: '10px', backgroundColor: '#ECBC76',
+                color: 'white', border: 'none', borderRadius: '8px',
+                cursor: 'pointer', fontSize: '14px', fontWeight: 'bold',
+            }}>Logout</button>
         </div>
     </div>
 );
@@ -273,7 +257,7 @@ function AdminDashboard() {
     // web
     return (
         <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
-            <Sidebar navigate={navigate} handleLogout={handleLogout} />
+            <DesktopSidebar navigate={navigate} handleLogout={handleLogout} user={user} />
 
             {/* Main Content */}
             <div style={{ marginLeft: '240px', flex: 1, padding: '32px' }}>

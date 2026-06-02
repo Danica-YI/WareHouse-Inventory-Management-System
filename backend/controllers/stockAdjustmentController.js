@@ -31,7 +31,7 @@ const getAdjustmentById = async (req, res) => {
 // Create adjustment request (staff)
 const createAdjustment = async (req, res) => {
     try {
-        const { stockId, current_qty, actual_qty, reason } = req.body;
+        const { stock: stockId, current_qty, actual_qty, reason } = req.body;
 
         const stock = await Stock.findById(stockId);
         if (!stock) return res.status(404).json({ message: 'Stock not found' });
