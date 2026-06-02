@@ -103,12 +103,15 @@ npm test
 
 ## Live Demo
 
-- **Public URL**: http://16.176.208.163
-- **EC2 Instance ID**: i-0ec36a78dc5d80eed
+- **Live URL**: https://ware-house-inventory-management-sys.vercel.app
+- **Backend**: Hosted on Render
+- **Previously deployed on AWS EC2** (Nginx + PM2 + GitHub Actions CI/CD)
+- <img width="1253" height="684" alt="ec2" src="https://github.com/user-attachments/assets/fa26f56d-6ba1-4559-b11e-def27fa39a1e" />
+
 
 ## Test Account
 
 | Role  |       Email         | Password |
 |-------|---------------------|----------|
-| Admin | kokorr247@gmail.com | 123      |
+| Admin | admin1@gmail.com | 123      |
 | Staff | staff1@gmail.com    | 123      |
