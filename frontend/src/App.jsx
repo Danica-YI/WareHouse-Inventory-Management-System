@@ -10,6 +10,7 @@ import Orders from './pages/Orders';
 import Suppliers from './pages/Suppliers';
 import Adjustments from './pages/Adjustments';
 import SearchResults from './pages/SearchResults';
+import Users from './pages/User';
 
 const PrivateRoute = ({ children }) => {
     const { user } = useAuth();
@@ -61,6 +62,11 @@ function App() {
                     <SearchResults />
                 </PrivateRoute>
             }/>
+            <Route path="/users" element={
+                <PrivateRoute>
+                    <Users />
+                </PrivateRoute>
+           }/>
             <Route path="/" element={<Navigate to="/login" />} />
         </Routes>
     );

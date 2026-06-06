@@ -137,12 +137,13 @@ function AdminDashboard() {
 
     const fetchStats = async () => {
         try {
-            const [stocks, orders, suppliers, alerts, adjustments] = await Promise.all([
+            const [stocks, orders, suppliers, alerts, adjustments, users] = await Promise.all([
                 API.get('/stocks'),
                 API.get('/orders'),
                 API.get('/suppliers'),
                 API.get('/alerts/active'),
                 API.get('/adjustments'),
+                API.get('/users'),
             ]);
 
             setStats({
@@ -150,7 +151,7 @@ function AdminDashboard() {
                 purchaseOrders: orders.data.length,
                 totalSuppliers: suppliers.data.length,
                 lowStockAlerts: alerts.data.length,
-                totalUsers: 0,
+                totalUsers: users.data.length,
                 adjustmentRequests: adjustments.data.filter(a => a.status === 'pending').length,
             });
         } catch (err) {
