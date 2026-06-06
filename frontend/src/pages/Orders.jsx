@@ -650,6 +650,16 @@ function Orders() {
         navigate('/login');
     };
 
+    const handleBack = () => {
+        const openId = searchParams.get('openId');
+        if (openId){
+            navigate(-1); // by search bar, back to search page
+        }
+        else {
+            setSelectedOrder(null); // by purchase order page, back to it
+        }
+    }
+
     const filteredOrders = orders.filter(o =>
         o.orderNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         o.supplier?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -719,7 +729,7 @@ function Orders() {
             return (
                 <OrderDetail
                     order={selectedOrder}
-                    onBack={() => setSelectedOrder(null)}
+                    onBack={handleBack}
                     onUpdateStatus={handleUpdateStatus}
                     onAddTracking={handleAddTracking}
                     user={user}
@@ -795,7 +805,7 @@ function Orders() {
         );
     };
 
-    // 手机版
+    // mobile
     if (isMobile) {
         return (
             <div style={{
@@ -838,7 +848,7 @@ function Orders() {
                         ) : selectedOrder ? (
                             <OrderDetail
                                 order={selectedOrder}
-                                onBack={() => setSelectedOrder(null)}
+                                onBack={handleBack}
                                 onUpdateStatus={handleUpdateStatus}
                                 onAddTracking={handleAddTracking}
                                 user={user}
