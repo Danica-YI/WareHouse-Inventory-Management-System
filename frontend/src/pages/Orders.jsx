@@ -641,7 +641,8 @@ function Orders() {
 
     const filteredOrders = orders.filter(o =>
         o.orderNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        o.supplier?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+        o.supplier?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        o.status?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const OrderCard = ({ order }) => (
@@ -840,9 +841,9 @@ function Orders() {
                                     alignItems: 'center', gap: '8px', marginBottom: '16px',
                                     boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
                                 }}>
-                                    <span style={{ color: '#aaa' }}>🔍</span>
+
                                     <input
-                                        placeholder="Search by Order No. or Supplier"
+                                        placeholder="Search by Order No., Supplier or Order Status"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         style={{ border: 'none', outline: 'none', width: '100%', fontSize: '14px', color: '#888' }}
@@ -881,9 +882,9 @@ function Orders() {
                                 alignItems: 'center', gap: '8px',
                                 boxShadow: '0 1px 4px rgba(0,0,0,0.08)', width: '280px',
                             }}>
-                                <span style={{ color: '#aaa' }}>🔍</span>
+                               
                                 <input
-                                    placeholder="Search by Order No. or Supplier"
+                                    placeholder="Search by Order No., Supplier or Order Status"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     style={{ border: 'none', outline: 'none', width: '100%', fontSize: '14px', color: '#888' }}
