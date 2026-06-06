@@ -126,7 +126,7 @@ const totalResults = matchedStocks.length + matchedOrders.length + matchedSuppli
                             </Section>
                         )}
 
-                        {matchedSuppliers.length > 0 && (
+                        {user?.role === 'admin' && matchedSuppliers.length > 0 && (   // confirm admin or staff
                             <Section label={`Suppliers (${matchedSuppliers.length})`}>
                                 {matchedSuppliers.map(s => (
                                     <ResultCard

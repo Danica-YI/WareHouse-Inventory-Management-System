@@ -135,6 +135,7 @@ const DesktopSidebar = ({ navigate, handleLogout, user }) => (
 function StaffDashboard() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = useState('');
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const [stats, setStats] = useState({
         totalStocks:0,
@@ -182,6 +183,11 @@ function StaffDashboard() {
     const handleLogout = () => {
         logout();
         navigate('/login');
+    };
+
+    const handleSearch = () => {
+        const q = searchQuery.trim();
+        if (q) navigate(`/search?q=${encodeURIComponent(q)}`);
     };
 
     const cards = [
@@ -241,9 +247,12 @@ function StaffDashboard() {
                                 gap: '8px',
                                 boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
                             }}>
-                                <span style={{ color: '#aaa' }}>🔍</span>
+                                
                                 <input
                                     placeholder="Search for something"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    onKeyDown={(e) => {if (e.key === 'Enter') handleSearch(); }}
                                     style={{ border: 'none', outline: 'none', width: '100%', fontSize: '14px', color: '#888' }}
                                 />
                             </div>
@@ -318,9 +327,12 @@ function StaffDashboard() {
                         boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
                         width: '300px',
                     }}>
-                        <span style={{ color: '#aaa' }}>🔍</span>
+                        
                         <input
                             placeholder="Search for something"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
                             style={{ border: 'none', outline: 'none', width: '100%', fontSize: '14px', color: '#888' }}
                         />
                     </div>
