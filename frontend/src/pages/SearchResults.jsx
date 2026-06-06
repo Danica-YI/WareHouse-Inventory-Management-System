@@ -44,7 +44,7 @@ const matchedStocks = q
     : [];
 
 const matchedOrders = q
-     ? orders.filter(O =>
+     ? orders.filter(o =>
         o.orderNumber?.toLowerCase().includes(q) ||
         o.supplier?.name?.toLowerCase().includes(q))
     : [];

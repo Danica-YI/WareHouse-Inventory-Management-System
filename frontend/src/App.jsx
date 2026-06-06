@@ -9,6 +9,7 @@ import Outbound from './pages/Outbound';
 import Orders from './pages/Orders';
 import Suppliers from './pages/Suppliers';
 import Adjustments from './pages/Adjustments';
+import SearchResults from './pages/SearchResults';
 
 const PrivateRoute = ({ children }) => {
     const { user } = useAuth();
@@ -55,6 +56,11 @@ function App() {
                    <Adjustments />
                 </PrivateRoute>
             } />
+            <Route path= "/search" element={
+                <PrivateRoute>
+                    <SearchResults />
+                </PrivateRoute>
+            }/>
             <Route path="/" element={<Navigate to="/login" />} />
         </Routes>
     );

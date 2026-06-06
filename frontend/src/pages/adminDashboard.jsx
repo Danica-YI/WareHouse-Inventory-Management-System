@@ -126,6 +126,7 @@ function AdminDashboard() {
         totalUsers: 0,
         adjustmentRequests: 0,
     });
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         fetchStats();
@@ -160,6 +161,11 @@ function AdminDashboard() {
     const handleLogout = () => {
         logout();
         navigate('/login');
+    };
+
+    const handleSearch = () => {
+        const q = searchQuery.trim();
+        if (q) navigate(`/search?q=${encodeURIComponent(q)}`);
     };
 
     const cards = [
@@ -277,21 +283,31 @@ function AdminDashboard() {
                     </div>
 
                     {/* Search Bar */}
-                    <div style={{
-                        backgroundColor: 'white',
-                        borderRadius: '20px',
-                        padding: '10px 20px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
-                        width: '300px',
-                    }}>
-                        <span style={{ color: '#aaa' }}>🔍</span>
-                        <input
-                            placeholder="Search for something"
-                            style={{ border: 'none', outline: 'none', width: '100%', fontSize: '14px', color: '#888' }}
-                        />
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <div style={{
+                            backgroundColor: 'white',
+                            borderRadius: '20px',
+                            padding: '10px 20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
+                            width: '300px',
+                        }}>
+                            <span style={{ color: '#aaa' }}>🔍</span>
+                            <input
+                                placeholder="Search for something"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
+                                style={{ border: 'none', outline: 'none', width: '100%', fontSize: '14px', color: '#444' }}
+                            />
+                        </div>
+                        <button onClick={handleSearch} style={{
+                            padding: '10px 20px', backgroundColor: '#ECBC76', color: 'white',
+                            border: 'none', borderRadius: '20px', cursor: 'pointer',
+                            fontWeight: 'bold', fontSize: '14px',
+                        }}>Search</button>
                     </div>
                 </div>
 
