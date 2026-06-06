@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import API from '../service/api';
 
@@ -483,6 +483,7 @@ const CreateOrderForm = ({ formData, setFormData, suppliers, stocks, handleSubmi
 function Orders() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const [orders, setOrders] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
@@ -503,6 +504,16 @@ function Orders() {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    useEffect(() => {
+        const openId = searchParams.get('openId');
+        if (openId && orders.length > 0){
+            const target = orders.find(o => o._id === openId);
+            if (target) setSelectedOrder(target);
+        }
+    }, [orders, searchParams]);
+
+
 
     const fetchData = async () => {
         try {

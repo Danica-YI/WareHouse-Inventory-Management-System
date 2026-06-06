@@ -120,7 +120,7 @@ const totalResults = matchedStocks.length + matchedOrders.length + matchedSuppli
                                         key={o._id}
                                         title={o.orderNumber}
                                         subtitle={`Supplier: ${o.supplier?.name || '-'} • ${o.status}`}
-                                        onClick={() => navigate('/orders')}
+                                        onClick={() => navigate(`/orders?openId=${o._id}`)}
                                     />
                                 ))}
                             </Section>
