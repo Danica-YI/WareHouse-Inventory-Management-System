@@ -225,7 +225,7 @@ function AdminDashboard() {
                                 gap: '8px',
                                 boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
                             }}>
-                                <span style={{ color: '#aaa' }}>🔍</span>
+                               
                                 <input
                                     placeholder="Search for something"
                                     style={{ border: 'none', outline: 'none', width: '100%', fontSize: '14px', color: '#888' }}

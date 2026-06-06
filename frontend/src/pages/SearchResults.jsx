@@ -107,7 +107,7 @@ const totalResults = matchedStocks.length + matchedOrders.length + matchedSuppli
                                         key={s._id}
                                         title={s.name}
                                         subtitle={`SKU: ${s.sku} • Qty: ${s.quantity}`}
-                                        onClick={() => navigate('/stocks')}
+                                        onClick={() => navigate(`/stocks?q=${encodeURIComponent(s.name)}`)}
                                     />
                                 ))}
                             </Section>
@@ -133,7 +133,7 @@ const totalResults = matchedStocks.length + matchedOrders.length + matchedSuppli
                                         key={s._id}
                                         title={s.name}
                                         subtitle={s.contactEmail || ''}
-                                        onClick={() => navigate('/suppliers')}
+                                        onClick={() => navigate(`/suppliers?q=${encodeURIComponent(s.name)}`)}
                                     />
                                 ))}
                             </Section>

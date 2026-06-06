@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import API from '../service/api';
 
-// 手机版底部导航
+// navigation bar on mobile version
 const MobileBottomNav = ({ navigate, user }) => (
     <div style={{
         position: 'sticky',
@@ -177,11 +177,12 @@ const StockForm = ({ formData, setFormData, handleSubmit, editingStock, setShowF
 function Stocks() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const [stocks, setStocks] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [editingStock, setEditingStock] = useState(null);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
     const [error, setError] = useState('');
     const [formData, setFormData] = useState({
         name: '', sku: '', category: '', quantity: '', unit: '', price: '', lowStockThreshold: '', description: ''
@@ -394,7 +395,7 @@ function Stocks() {
                             boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
                             width: '250px',
                         }}>
-                            <span style={{ color: '#aaa' }}>🔍</span>
+                           
                             <input
                                 placeholder="Search stocks..."
                                 value={searchTerm}

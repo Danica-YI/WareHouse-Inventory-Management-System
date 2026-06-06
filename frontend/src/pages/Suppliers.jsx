@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import API from '../service/api';
 
@@ -187,11 +187,12 @@ const SupplierForm = ({ formData, setFormData, handleSubmit, editingSupplier, se
 function Suppliers() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const [suppliers, setSuppliers] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [editingSupplier, setEditingSupplier] = useState(null);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [formData, setFormData] = useState({
@@ -345,7 +346,7 @@ function Suppliers() {
         </div>
     );
 
-    // 手机版
+    // mobile
     if (isMobile) {
         return (
             <div style={{
@@ -420,7 +421,7 @@ function Suppliers() {
         );
     }
 
-    // 桌面版
+    // desktop
     return (
         <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
             <DesktopSidebar navigate={navigate} handleLogout={handleLogout} user={user} />
@@ -434,7 +435,7 @@ function Suppliers() {
                             alignItems: 'center', gap: '8px',
                             boxShadow: '0 1px 4px rgba(0,0,0,0.08)', width: '250px',
                         }}>
-                            <span style={{ color: '#aaa' }}>🔍</span>
+                           
                             <input
                                 placeholder="Search suppliers..."
                                 value={searchTerm}
