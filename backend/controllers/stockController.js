@@ -1,4 +1,5 @@
 const Stock = require('../models/Stock');
+const { createAlert } = require('./alertController');
 
 // Get all stocks
 const getAllStocks = async (req, res) => {
@@ -28,6 +29,11 @@ const createStock = async (req, res) => {
         const stock = await Stock.create({
             name, sku, category, quantity, unit, price, lowStockThreshold, description
         });
+
+        //check low stock and trigger alert
+        if (stock.quantity <= stock.lowStockThreshold) {
+            await createAlert(stock._id);
+        }
         res.status(201).json(stock);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -52,6 +58,11 @@ const updateStock = async (req, res) => {
         stock.status = status || stock.status;
 
         const updatedStock = await stock.save();
+
+        //check low stock and trigger alert
+        if (updatedStock.quantity <= updatedStock.lowStockThreshold) {
+            await createAlert(updatedStock._id)
+        }
         res.status(200).json(updatedStock);
     } catch (error) {
         res.status(500).json({ message: error.message });
