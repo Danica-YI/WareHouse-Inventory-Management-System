@@ -2,72 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import API from '../service/api';
+import { MobileBottomNav, DesktopSidebar } from '../pages/layout';
 
-const DesktopSidebar = ({ navigate, handleLogout, user }) => (
-    <div style={{
-        width: '240px', minHeight: '100vh', backgroundColor: 'white',
-        borderRight: '1px solid #eee', padding: '20px 0',
-        position: 'fixed', left: 0, top: 0, display: 'flex', flexDirection: 'column',
-    }}>
-        <div style={{ padding: '0 20px 30px', borderBottom: '1px solid #eee' }}>
-            <span style={{ color: '#ECBC76', fontWeight: 'bold', fontSize: '24px' }}>WIMS</span>
-            <p style={{ margin: '8px 0 0', fontSize: '12px', color: '#888' }}>Warehouse Inventory</p>
-        </div>
-        <div style={{ padding: '20px', borderBottom: '1px solid #eee' }}>
-            <p style={{ margin: 0, fontWeight: 'bold', fontSize: '14px' }}>{user?.name}</p>
-            <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#ECBC76' }}>{user?.role?.toUpperCase()}</p>
-        </div>
-        <nav style={{ flex: 1, padding: '20px 0' }}>
-            {[
-                { icon: '🏠', label: 'Dashboard', path: '/dashboard' },
-                { icon: '📦', label: 'Stock', path: '/stocks' },
-                { icon: '📋', label: 'Purchase Orders', path: '/orders' },
-                { icon: '👥', label: 'Suppliers', path: '/suppliers' },
-                { icon: '👤', label: 'Users', path: '/users' },
-                { icon: '🔔', label: 'Low Stock Alerts', path: '/alerts' },
-                { icon: '⚙️', label: 'Adjustments', path: '/adjustments' },
-            ].map((item) => (
-                <div key={item.path} onClick={() => navigate(item.path)} style={{
-                    padding: '12px 20px', cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px',
-                    color: window.location.pathname === item.path ? '#ECBC76' : '#444',
-                    fontWeight: window.location.pathname === item.path ? 'bold' : 'normal',
-                    backgroundColor: window.location.pathname === item.path ? '#FFF8EC' : 'transparent',
-                }}
-                    onMouseEnter={e => e.currentTarget.style.backgroundColor = '#FFF8EC'}
-                    onMouseLeave={e => {
-                        if (window.location.pathname !== item.path)
-                            e.currentTarget.style.backgroundColor = 'transparent';
-                    }}
-                >
-                    <span>{item.icon}</span><span>{item.label}</span>
-                </div>
-            ))}
-        </nav>
-        <div style={{ padding: '20px', borderTop: '1px solid #eee' }}>
-            <button onClick={handleLogout} style={{
-                width: '100%', padding: '10px', backgroundColor: '#ECBC76',
-                color: 'white', border: 'none', borderRadius: '8px',
-                cursor: 'pointer', fontSize: '14px', fontWeight: 'bold',
-            }}>Logout</button>
-        </div>
-    </div>
-);
-
-const MobileBottomNav = ({ navigate }) => (
-    <div style={{
-        position: 'sticky', bottom: 0, width: '100%', backgroundColor: 'white',
-        display: 'flex', justifyContent: 'space-around', padding: '12px 0',
-        borderTop: '1px solid #eee', zIndex: 100, borderRadius: '0 0 40px 40px',
-    }}>
-        <span style={{ fontSize: '24px', cursor: 'pointer' }} onClick={() => navigate('/dashboard')}>👤</span>
-        <span style={{ fontSize: '24px', cursor: 'pointer' }} onClick={() => navigate('/orders')}>📋</span>
-        <span style={{ fontSize: '24px', cursor: 'pointer' }} onClick={() => navigate('/suppliers')}>👥</span>
-        <span style={{ fontSize: '24px', cursor: 'pointer' }} onClick={() => navigate('/alerts')}>🔔</span>
-        <span style={{ fontSize: '24px', cursor: 'pointer' }} onClick={() => navigate('/adjustments')}>⚙️</span>
-        <span style={{ fontSize: '24px', cursor: 'pointer' }} onClick={() => navigate('/stocks')}>🏭</span>
-    </div>
-);
 
 const labelStyle = {
     fontSize: '14px', color: '#666',
@@ -80,7 +16,7 @@ const inputStyle = {
     fontSize: '14px', boxSizing: 'border-box', outline: 'none',
 };
 
-// Supplier Form — 在外面定义避免失焦
+// Supplier Form 
 const SupplierForm = ({ formData, setFormData, handleSubmit, editingSupplier, setShowForm, setEditingSupplier, error }) => (
     <div style={{
         backgroundColor: 'white', borderRadius: '16px',
@@ -415,7 +351,7 @@ function Suppliers() {
                         )}
                     </div>
 
-                    <MobileBottomNav navigate={navigate} />
+                    <MobileBottomNav navigate={navigate} user= {user} />
                 </div>
             </div>
         );
@@ -424,7 +360,7 @@ function Suppliers() {
     // desktop
     return (
         <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
-            <DesktopSidebar navigate={navigate} handleLogout={handleLogout} user={user} />
+            <DesktopSidebar navigate={navigate} handleLogout={handleLogout} user={user} activePath='/suppliers'/>
             <div style={{ marginLeft: '240px', flex: 1, padding: '30px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                     <h1 style={{ margin: 0, fontSize: '28px', fontWeight: 'bold' }}>All Suppliers</h1>
