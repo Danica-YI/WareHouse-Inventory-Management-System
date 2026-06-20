@@ -10,6 +10,7 @@ import Orders from './pages/Orders';
 import Suppliers from './pages/Suppliers';
 import Adjustments from './pages/Adjustments';
 import SearchResults from './pages/SearchResults';
+import Alerts from './pages/Alerts';
 import Users from './pages/User';
 
 const PrivateRoute = ({ children }) => {
@@ -65,6 +66,11 @@ function App() {
             <Route path="/users" element={
                 <PrivateRoute>
                     <Users />
+                </PrivateRoute>
+           }/>
+           <Route path="/alerts" element={
+                <PrivateRoute>
+                    <Alerts />
                 </PrivateRoute>
            }/>
             <Route path="/" element={<Navigate to="/login" />} />

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import API from '../service/api';
+import { MobileBottomNav, DesktopSidebar } from '../pages/layout';
 
 const StatCard = ({ title, value, onClick, color = '#222' }) => (
     <div onClick={onClick} style={{
@@ -33,86 +34,7 @@ const StatCard = ({ title, value, onClick, color = '#222' }) => (
     </div>
 );
 
-// navigation on mobile phone
-const BottomNav = ({ navigate }) => (
-    <div style={{
-        position: 'sticky',
-        bottom: 0,
-        width: '100%',
-        backgroundColor: 'white',
-        display: 'flex',
-        justifyContent: 'space-around',
-        padding: '12px 0',
-        borderTop: '1px solid #eee',
-        zIndex: 100,
-        borderRadius: '0 0 40px 40px',
-    }}>
-        <span style={{ fontSize: '24px', cursor: 'pointer' }} onClick={() => navigate('/dashboard')}>👤</span>
-        <span style={{ fontSize: '24px', cursor: 'pointer' }} onClick={() => navigate('/orders')}>📋</span>
-        <span style={{ fontSize: '24px', cursor: 'pointer' }} onClick={() => navigate('/suppliers')}>👥</span>
-        <span style={{ fontSize: '24px', cursor: 'pointer' }} onClick={() => navigate('/alerts')}>🔔</span>
-        <span style={{ fontSize: '24px', cursor: 'pointer' }} onClick={() => navigate('/users')}>⚙️</span>
-        <span style={{ fontSize: '24px', cursor: 'pointer' }} onClick={() => navigate('/stocks')}>🏭</span>
-    </div>
-);
 
-// navigation on web
-const DesktopSidebar = ({ navigate, handleLogout, user }) => (
-    <div style={{
-        width: '240px', minHeight: '100vh', backgroundColor: 'white',
-        borderRight: '1px solid #eee', padding: '20px 0',
-        position: 'fixed', left: 0, top: 0, display: 'flex', flexDirection: 'column',
-    }}>
-        <div style={{ padding: '0 20px 30px', borderBottom: '1px solid #eee' }}>
-            <span style={{ color: '#ECBC76', fontWeight: 'bold', fontSize: '24px' }}>WIMS</span>
-            <p style={{ margin: '8px 0 0', fontSize: '12px', color: '#888' }}>Warehouse Inventory</p>
-        </div>
-        <div style={{ padding: '20px', borderBottom: '1px solid #eee' }}>
-            <p style={{ margin: 0, fontWeight: 'bold', fontSize: '14px' }}>{user?.name}</p>
-            <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#ECBC76' }}>{user?.role?.toUpperCase()}</p>
-        </div>
-        <nav style={{ flex: 1, padding: '20px 0' }}>
-            {[
-                { icon: '🏠', label: 'Dashboard', path: '/dashboard' },
-                { icon: '📦', label: 'Stock', path: '/stocks' },
-                ...(user?.role === 'admin' ? [
-                    { icon: '📋', label: 'Purchase Orders', path: '/orders' },
-                    { icon: '👥', label: 'Suppliers', path: '/suppliers' },
-                    { icon: '👤', label: 'Users', path: '/users' },
-                ] : [
-                    { icon: '📥', label: 'Inbound', path: '/inbound' },
-                    { icon: '📤', label: 'Outbound', path: '/outbound' },
-                    { icon: '📋', label: 'View Orders', path: '/orders' },
-                ]),
-                { icon: '🔔', label: 'Low Stock Alerts', path: '/alerts' },
-                { icon: '⚙️', label: 'Adjustments', path: '/adjustments' },
-            ].map((item) => (
-                <div key={item.path} onClick={() => navigate(item.path)} style={{
-                    padding: '12px 20px', cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px',
-                    color: window.location.pathname === item.path ? '#ECBC76' : '#444',
-                    fontWeight: window.location.pathname === item.path ? 'bold' : 'normal',
-                    backgroundColor: window.location.pathname === item.path ? '#FFF8EC' : 'transparent',
-                }}
-                    onMouseEnter={e => e.currentTarget.style.backgroundColor = '#FFF8EC'}
-                    onMouseLeave={e => {
-                        if (window.location.pathname !== item.path)
-                            e.currentTarget.style.backgroundColor = 'transparent';
-                    }}
-                >
-                    <span>{item.icon}</span><span>{item.label}</span>
-                </div>
-            ))}
-        </nav>
-        <div style={{ padding: '20px', borderTop: '1px solid #eee' }}>
-            <button onClick={handleLogout} style={{
-                width: '100%', padding: '10px', backgroundColor: '#ECBC76',
-                color: 'white', border: 'none', borderRadius: '8px',
-                cursor: 'pointer', fontSize: '14px', fontWeight: 'bold',
-            }}>Logout</button>
-        </div>
-    </div>
-);
 
 function AdminDashboard() {
     const { user, logout } = useAuth();
@@ -255,7 +177,7 @@ function AdminDashboard() {
                         </div>
                     </div>
 
-                    <BottomNav navigate={navigate} />
+                    <MobileBottomNav navigate={navigate} user={user} />
                 </div>
             </div>
         );
@@ -264,7 +186,7 @@ function AdminDashboard() {
     // web
     return (
         <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
-            <DesktopSidebar navigate={navigate} handleLogout={handleLogout} user={user} />
+            <DesktopSidebar navigate={navigate} handleLogout={handleLogout} user={user} activePath='/dashboard'/>
 
             {/* Main Content */}
             <div style={{ marginLeft: '240px', flex: 1, padding: '32px' }}>
