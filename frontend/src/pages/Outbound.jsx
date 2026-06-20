@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import API from '../service/api';
-import { MobileBottomNav, DesktopSidebar } from '../pages/Layout';
+import { MobileBottomNav, DesktopSidebar } from '../pages/layout';
 
 
 const labelStyle = {
