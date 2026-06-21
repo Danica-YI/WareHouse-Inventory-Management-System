@@ -16,7 +16,6 @@ function Alerts() {
     const [notes, setNotes] = useState('');
     const [error, setError] = useState('');
 
-    // a listener for the size of screen
     useEffect(() => {
         fetchAlerts();
         const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -120,7 +119,6 @@ function Alerts() {
                     <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
                         <h2 style={{ margin: '0 0 16px', fontWeight: 'bold', fontSize: '22px' }}>Low Stock Alerts</h2>
 
-                        {/* Filter buttons */}
                         <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
                             {['active', 'resolved', 'ignored', 'all'].map(f => (
                                 <button
@@ -194,7 +192,6 @@ function Alerts() {
                                         </p>
                                     )}
 
-                                    {/* Action buttons for admin on active alerts */}
                                     {user?.role === 'admin' && alert.status === 'active' && (
                                         <div style={{ marginTop: '12px' }}>
                                             {actionAlert === alert._id ? (
@@ -216,10 +213,10 @@ function Alerts() {
                                                     />
                                                     <div style={{ display: 'flex', gap: '8px' }}>
                                                         <button
-                                                            onClick={() => actionType === 'resolve' ? handleResolve(alert._id) : handleIgnore(alert._id)}
+                                                            onClick={() => handleIgnore(alert._id)}
                                                             style={{
                                                                 padding: '6px 14px',
-                                                                backgroundColor: actionType === 'resolve' ? '#52B788' : '#888',
+                                                                backgroundColor: '#888',
                                                                 color: 'white',
                                                                 border: 'none',
                                                                 borderRadius: '6px',
@@ -227,7 +224,7 @@ function Alerts() {
                                                                 fontSize: '12px',
                                                             }}
                                                         >
-                                                            Confirm {actionType === 'resolve' ? 'Reorder' : 'Ignore'}
+                                                            Confirm Ignore
                                                         </button>
                                                         <button
                                                             onClick={() => { setActionAlert(null); setNotes(''); }}
@@ -248,7 +245,16 @@ function Alerts() {
                                             ) : (
                                                 <div style={{ display: 'flex', gap: '8px' }}>
                                                     <button
-                                                        onClick={() => { setActionAlert(alert._id); setActionType('resolve'); setNotes(''); }}
+                                                        onClick={() => navigate('/orders', {
+                                                            state: {
+                                                                prefill: {
+                                                                    stockId: alert.stock?._id,
+                                                                    stockName: alert.stock?.name,
+                                                                    unitPrice: alert.stock?.price || 0,
+                                                                    alertId: alert._id,
+                                                                }
+                                                            }
+                                                        })}
                                                         style={{
                                                             padding: '6px 14px',
                                                             backgroundColor: '#52B788',
@@ -407,10 +413,10 @@ function Alerts() {
                                                             />
                                                             <div style={{ display: 'flex', gap: '6px' }}>
                                                                 <button
-                                                                    onClick={() => actionType === 'resolve' ? handleResolve(alert._id) : handleIgnore(alert._id)}
+                                                                    onClick={() => handleIgnore(alert._id)}
                                                                     style={{
                                                                         padding: '5px 10px',
-                                                                        backgroundColor: actionType === 'resolve' ? '#52B788' : '#888',
+                                                                        backgroundColor: '#888',
                                                                         color: 'white',
                                                                         border: 'none',
                                                                         borderRadius: '6px',
@@ -439,7 +445,16 @@ function Alerts() {
                                                     ) : (
                                                         <div style={{ display: 'flex', gap: '6px' }}>
                                                             <button
-                                                                onClick={() => { setActionAlert(alert._id); setActionType('resolve'); setNotes(''); }}
+                                                                onClick={() => navigate('/orders', {
+                                                                    state: {
+                                                                        prefill: {
+                                                                            stockId: alert.stock?._id,
+                                                                            stockName: alert.stock?.name,
+                                                                            unitPrice: alert.stock?.price || 0,
+                                                                            alertId: alert._id,
+                                                                        }
+                                                                    }
+                                                                })}
                                                                 style={{
                                                                     padding: '6px 12px',
                                                                     backgroundColor: '#52B788',
