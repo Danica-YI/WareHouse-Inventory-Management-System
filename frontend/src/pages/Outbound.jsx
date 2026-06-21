@@ -282,6 +282,45 @@ function Outbound() {
                             error={error}
                             success={success}
                         />
+                         {/* Recent Outbound Records */}
+                        <h3 style={{ margin: '24px 0 12px', fontSize: '18px', fontWeight: 'bold' }}>Recent Outbound Records</h3>
+                        {recentMovements.length === 0 ? (
+                            <div style={{
+                                backgroundColor: 'white', borderRadius: '16px',
+                                padding: '30px', textAlign: 'center', color: '#888',
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                            }}>No outbound records yet</div>
+                        ) : (
+                            recentMovements.map((m) => (
+                                <div key={m._id} style={{
+                                    backgroundColor: 'white', borderRadius: '16px',
+                                    padding: '16px', marginBottom: '12px',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                                    borderLeft: `4px solid ${m.type === 'outbound_sale' ? '#FF6B6B' : '#FF9F1C'}`,
+                                }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <div>
+                                            <p style={{ margin: '0 0 4px', fontWeight: 'bold', fontSize: '14px' }}>{m.stock?.name}</p>
+                                            <p style={{ margin: '0 0 4px', fontSize: '12px', color: '#888' }}>SKU: {m.stock?.sku}</p>
+                                            <p style={{ margin: 0, fontSize: '12px', color: '#888' }}>Qty: {m.quantity}</p>
+                                            {m.supplier && <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#888' }}>Supplier: {m.supplier?.name}</p>}
+                                        </div>
+                                        <div style={{ textAlign: 'right' }}>
+                                            <span style={{
+                                                backgroundColor: m.type === 'outbound_sale' ? '#FFE5E5' : '#FFF0E0',
+                                                color: m.type === 'outbound_sale' ? '#FF6B6B' : '#FF9F1C',
+                                                padding: '4px 8px', borderRadius: '20px', fontSize: '11px',
+                                            }}>
+                                                {m.type === 'outbound_sale' ? 'Sale' : 'Return'}
+                                            </span>
+                                            <p style={{ margin: '4px 0 0', fontSize: '11px', color: '#aaa' }}>
+                                                {new Date(m.createdAt).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
                     </div>
                     <MobileBottomNav navigate={navigate} />
                 </div>
