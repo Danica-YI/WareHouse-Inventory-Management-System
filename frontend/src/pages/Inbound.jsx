@@ -25,8 +25,8 @@ function Inbound() {
     const fetchOrders = async () => {
         try {
             const { data } = await API.get('/orders');
-            // Show  shipped orders for inbound
-            setOrders(data.filter(o =>  o.status === 'shipped'));
+            // Show  shipped and received orders for inbound
+            setOrders(data.filter(o =>  o.status === 'shipped' || o.status === 'received'));
         } catch (err) {
             setError('Failed to fetch orders');
         }
@@ -130,49 +130,76 @@ function Inbound() {
         </div>
     );
 
-    const OrderList = () => (
+   const OrderList = () => {
+    const shippedOrders = orders.filter(o => o.status === 'shipped');
+    const receivedOrders = orders.filter(o => o.status === 'received');
+
+    return (
         <div>
-            {orders.length === 0 ? (
+            <h3 style={{ margin: '0 0 12px', fontSize: '18px', color: '#222' }}>Pending Receipt</h3>
+            {shippedOrders.length === 0 ? (
                 <div style={{
                     backgroundColor: 'white', borderRadius: '16px',
-                    padding: '40px', textAlign: 'center', color: '#888',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                    padding: '30px', textAlign: 'center', color: '#888',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)', marginBottom: '24px',
                 }}>
-                    No approved or shipped orders available
+                    No shipped orders waiting to be received
                 </div>
             ) : (
-                orders.map((order) => (
+                shippedOrders.map((order) => (
                     <div key={order._id} onClick={() => { setSelectedOrder(order); setReceivedQty({}); }} style={{
                         backgroundColor: 'white', borderRadius: '16px',
                         padding: '20px', marginBottom: '16px',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                        cursor: 'pointer', borderLeft: `4px solid ${statusColor(order.status)}`,
+                        cursor: 'pointer', borderLeft: '4px solid #56CFE1',
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                             <div>
                                 <p style={{ margin: '0 0 6px', fontWeight: 'bold', fontSize: '16px' }}>{order.orderNumber}</p>
-                                <p style={{ margin: '0 0 4px', fontSize: '14px', color: '#666' }}>
-                                    Supplier: {order.supplier?.name}
-                                </p>
-                                <p style={{ margin: '0 0 4px', fontSize: '14px', color: '#666' }}>
-                                    {order.items?.length} items • ${order.totalAmount}
-                                </p>
-                                <p style={{ margin: 0, fontSize: '13px', color: '#aaa' }}>
-                                    {new Date(order.createdAt).toLocaleDateString()}
-                                </p>
+                                <p style={{ margin: '0 0 4px', fontSize: '14px', color: '#666' }}>Supplier: {order.supplier?.name}</p>
+                                <p style={{ margin: '0 0 4px', fontSize: '14px', color: '#666' }}>{order.items?.length} items • ${order.totalAmount}</p>
+                                <p style={{ margin: 0, fontSize: '13px', color: '#aaa' }}>{new Date(order.createdAt).toLocaleDateString()}</p>
                             </div>
-                            <span style={{
-                                color: statusColor(order.status),
-                                fontWeight: 'bold', fontSize: '14px',
-                            }}>{order.status?.charAt(0).toUpperCase() + order.status?.slice(1)}</span>
+                            <span style={{ color: '#56CFE1', fontWeight: 'bold', fontSize: '14px' }}>Shipped</span>
+                        </div>
+                    </div>
+                ))
+            )}
+
+            <h3 style={{ margin: '24px 0 12px', fontSize: '18px', color: '#222' }}>Received History</h3>
+            {receivedOrders.length === 0 ? (
+                <div style={{
+                    backgroundColor: 'white', borderRadius: '16px',
+                    padding: '30px', textAlign: 'center', color: '#888',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                }}>
+                    No received orders yet
+                </div>
+            ) : (
+                receivedOrders.map((order) => (
+                    <div key={order._id} style={{
+                        backgroundColor: 'white', borderRadius: '16px',
+                        padding: '20px', marginBottom: '16px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                        borderLeft: '4px solid #52B788',
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                            <div>
+                                <p style={{ margin: '0 0 6px', fontWeight: 'bold', fontSize: '16px' }}>{order.orderNumber}</p>
+                                <p style={{ margin: '0 0 4px', fontSize: '14px', color: '#666' }}>Supplier: {order.supplier?.name}</p>
+                                <p style={{ margin: '0 0 4px', fontSize: '14px', color: '#666' }}>{order.items?.length} items • ${order.totalAmount}</p>
+                                <p style={{ margin: 0, fontSize: '13px', color: '#aaa' }}>{new Date(order.createdAt).toLocaleDateString()}</p>
+                            </div>
+                            <span style={{ color: '#52B788', fontWeight: 'bold', fontSize: '14px' }}>Received</span>
                         </div>
                     </div>
                 ))
             )}
         </div>
     );
+};
 
-    // 手机版
+    // mobile
     if (isMobile) {
         return (
             <div style={{
