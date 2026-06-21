@@ -276,7 +276,7 @@ function Stocks() {
         );
     }
 
-    // web
+    // desktop
 
     return (
         <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
@@ -326,6 +326,56 @@ function Stocks() {
                 </div>
 
                 {error && <p style={{ color: 'red' }}>{error}</p>}
+
+                {/* Inbound & Outbound */}
+                <div style={{ display:'flex', gap:'20px', marginBottom: '24px' }}>
+                    <div onClick={() => navigate('/Inbound')} style ={{
+                        flex: 1,
+                        backgroundColor:'white',
+                        borderRadius:'16px',
+                        padding:'20px 24px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                        cursor:'pointer',
+                        display:'flex',
+                        justifyContent:'space-between',
+                        alignItems:'center',
+                        transition:'transform 0.2s',
+                    }}
+                        onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                        onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+                        
+                    >
+                        <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px' }}>Inbound Order</p>
+                        <div style={{
+                            width: '36px', height: '36px', borderRadius: '50%',
+                            backgroundColor: '#222', display: 'flex', alignItems: 'center',
+                            justifyContent: 'center', color: 'white', fontSize: '18px',
+                        }}>→</div>
+                    </div>
+                    <div onClick={() => navigate('/Outbound')} style={{
+                        flex: 1,
+                        backgroundColor: 'white',
+                        borderRadius: '16px',
+                        padding: '20px 24px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        transition: 'transform 0.2s',
+                    }}
+                        onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                        onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+                    >
+                        <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px' }}>Outbound Order</p>
+                        <div style={{
+                            width: '36px', height: '36px', borderRadius: '50%',
+                            backgroundColor: '#222', display: 'flex', alignItems: 'center',
+                            justifyContent: 'center', color: 'white', fontSize: '18px',
+                        }}>→</div>
+                    </div>
+                </div>
+
 
                 {showForm && (
                     <StockForm
