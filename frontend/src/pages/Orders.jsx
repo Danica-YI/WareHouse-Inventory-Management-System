@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import API from '../service/api';
 import { MobileBottomNav, DesktopSidebar } from '../pages/layout';
@@ -413,6 +413,8 @@ function Orders() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    const location = useLocation();
+    const [reorderAlertId, setReorderAlertId] = useState(null);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const [orders, setOrders] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
@@ -442,7 +444,34 @@ function Orders() {
         }
     }, [orders, searchParams]);
 
+    // Arriving from a low-stock alert's Reorder button: open the form with that product filled in.
+    useEffect(() => {
+        const prefill = location.state?.prefill;
+        if (!prefill) return;
+        setFormData({
+            orderId: '', supplierId: '',
+            items: [{ stockId: prefill.stockId || '', quantity: '', unitPrice: prefill.unitPrice || '' }],
+        });
+        setReorderAlertId(prefill.alertId || null);
+        setShowCreateForm(true);
+        // Clear the state so a refresh does not reopen the form.
+        navigate(location.pathname, { replace: true, state: null });
+        // Runs once on arrival; the state is cleared above, so later changes must not re-run it.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
+    // Once the order exists, mark the alert that started it as reordered.
+    const markAlertReordered = async () => {
+        if (!reorderAlertId) return;
+        try {
+            await API.put(`/alerts/${reorderAlertId}/resolve`, {
+                resolution: 'reorder',
+                notes: 'Purchase order created from this alert',
+            });
+        } catch {
+            // The order is already saved; an alert someone else resolved is not an error here.
+        }
+    };
 
     const fetchData = async () => {
         try {
@@ -461,6 +490,7 @@ function Orders() {
 
     const resetForm = () => {
         setFormData({ orderId: '', supplierId: '', items: [{ stockId: '', quantity: '', unitPrice: '' }] });
+        setReorderAlertId(null);
         setError('');
     };
 
@@ -477,6 +507,7 @@ function Orders() {
                     stock: i.stockId, quantity: Number(i.quantity), unitPrice: Number(i.unitPrice),
                 })),
             });
+            await markAlertReordered();
             setSuccess('Order saved as draft!');
             setShowCreateForm(false);
             resetForm();
@@ -512,6 +543,7 @@ function Orders() {
                 orderId = data._id;
             }
             await API.put(`/orders/${orderId}/submit`);
+            await markAlertReordered();
             setSuccess('Order submitted successfully!');
             setShowCreateForm(false);
             resetForm();

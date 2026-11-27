@@ -5,7 +5,7 @@ const Stock = require('../models/Stock');
 const getAllAlerts = async (req, res) => {
     try {
         const alerts = await Alert.find()
-            .populate('stock', 'name sku quantity lowStockThreshold')
+            .populate('stock', 'name sku quantity lowStockThreshold price')
             .populate('resolvedBy', 'name email');
         res.status(200).json(alerts);
     } catch (error) {
@@ -17,7 +17,7 @@ const getAllAlerts = async (req, res) => {
 const getActiveAlerts = async (req, res) => {
     try {
         const alerts = await Alert.find({ status: 'active' })
-            .populate('stock', 'name sku quantity lowStockThreshold')
+            .populate('stock', 'name sku quantity lowStockThreshold price')
             .populate('resolvedBy', 'name email');
         res.status(200).json(alerts);
     } catch (error) {
@@ -29,7 +29,7 @@ const getActiveAlerts = async (req, res) => {
 const getAlertById = async (req, res) => {
     try {
         const alert = await Alert.findById(req.params.id)
-            .populate('stock', 'name sku quantity lowStockThreshold')
+            .populate('stock', 'name sku quantity lowStockThreshold price')
             .populate('resolvedBy', 'name email');
         if (!alert) return res.status(404).json({ message: 'Alert not found' });
         res.status(200).json(alert);
